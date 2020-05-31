@@ -1,0 +1,58 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+#wrap{
+	width: 320px;
+	height: 480px;
+	background: url(../img/game_bg.jpg) 0 0 no-repeat;
+	margin: 20px auto;
+	position: relative;
+}
+#scoring{
+	color: white;
+	font-weight: bold;
+	position: absolute;
+	top: 10px;
+	left: 60px;
+}
+#countDown{
+	background: url(../img/progress.png) 0 0 no-repeat;
+	width: 180px;
+	height: 16px;
+	position: absolute;
+	top: 66px;
+	left: 63px;
+}
+#wolfs{
+	
+}
+#wolfs img{
+	position: absolute;
+}
+#menu{
+	position: absolute;
+	left: 0;
+	top: 300px;
+	width: 320px;
+	border: 1px solid black;
+	text-align: center;
+}
+#start,#handle,#gameOver{
+	font-size: 30px;
+	font-weight: bold;
+	text-decoration: none;
+	color: orange;
+	line-height: 50px;
+	text-shadow: 0 0 5px yellow;
+}
+#gameOver{
+	width: 320px;
+	position: absolute;
+	top: 300px;
+	left: 0;
+	text-align: center;
+	display: none;
+}
+
+

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>锅打灰太狼</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#root{
+				width: 320px;
+				height: 480px;
+				margin: 20px auto;
+				background: url(img/game_bg.jpg) no-repeat;
+				background-size: cover;
+				position: relative;
+			}
+			#fen{
+				color: gold;
+				font-size: 20px;
+				font-weight: bold;
+				height: 30px;
+				line-height: 30px;
+				position: absolute;
+				top: 7px;
+				left: 60px;
+			}
+			#djst{
+				width: 180px;
+				height: 16px;
+				background: url(img/progress.png);
+				background-size: cover;
+				position: absolute;
+				top: 66px;
+				left: 63px;
+			}
+			.btn{
+				width: 108px;
+				height: 101px;
+				background-size: cover;
+			}
+			#box1{
+				position: absolute;
+				top: 115px;
+				left: 100px;
+			}
+			#box2{
+				position: absolute;
+				top: 160px;
+				left: 20px;
+			}
+			#box3{
+				position: absolute;
+				top: 221px;
+				left: 18px;
+			}
+			#box4{
+				position: absolute;
+				top: 294px;
+				left: 32px;
+			}
+			#box5{
+				position: absolute;
+				top: 274px;
+				left: 121px;
+			}
+			#box6{
+				position: absolute;
+				top: 296px;
+				left: 209px;
+			}
+			#box7{
+				position: absolute;
+				top: 212px;
+				left: 201px;
+			}
+			#box8{
+				position: absolute;
+				top: 142px;
+				left: 189px;
+			}
+			#box9{
+				position: absolute;
+				top: 192px;
+				left: 105px;
+			}
+			#start{
+				width: 100px;
+				height: 50px;
+				color: darkmagenta;
+				font-size: 20px;
+				font-weight: bold;
+				line-height: 50px;
+				text-align: center;
+				border: 3px solid gold;
+				border-radius: 10px;
+				background-color: mediumspringgreen;
+				position: absolute;
+				bottom: 10px;
+				left: 107px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root">
+			<!--分数-->
+			<div id="fen">0</div>
+			<!--倒计时-->
+			<div id="djst"></div>
+			<!--九个坑-->
+			<div class="btn" id="box1"></div>
+			<div class="btn" id="box2"></div>
+			<div class="btn" id="box3"></div>
+			<div class="btn" id="box4"></div>
+			<div class="btn" id="box5"></div>
+			<div class="btn" id="box6"></div>
+			<div class="btn" id="box7"></div>
+			<div class="btn" id="box8"></div>
+			<div class="btn" id="box9"></div>
+			<div id="start">开 始</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+	window.onload = function(){
+		var fen = document.getElementById("fen");
+		var djst = document.getElementById("djst");
+		var btns = document.getElementsByClassName("btn");
+		var start = document.getElementById("start");
+		var s0;//延迟计时器，协调狼和时间条同时开始
+		var s1;//计时器，多久换坑
+		var s2;//计时器，动画的图片切换
+		var s3;//倒计时
+		var n;//随机出现在哪个坑
+		var n1;//用来存上一次的 n，避免连续两次出现在同一个坑
+		var x = 0;//动画中图片下标
+		var or;//随机是小灰灰还是灰太狼
+		var y;//判断是否已经被击打，避免重复击打
+		var defen = 0;//得分
+		var sj = 2000;//游戏时长
+		var cd;//倒计时条的初长度
+		cd = djst.offsetWidth;
+		start.onclick = function (){
+			//start.onclick = null;
+			clearInterval(s0);
+			clearInterval(s1);
+			clearInterval(s2);
+			clearInterval(s3);
+			x = 0;
+			y = 0;
+			defen = 0;
+			sj = 2000;
+			fen.innerHTML = defen;
+			djst.style.width = cd * sj / 2000 + "px";
+			start.innerHTML = "重新开始";
+			for (var i = 0; i < btns.length; i++) {
+				btns[i].style.background = "none";
+				btns[i].style.display = "none";
+			}
+			function keng(){
+				clearInterval(s2);
+				x = 0;
+				y = 0;
+				for (var i = 0; i < btns.length; i++) {
+					btns[i].style.background = "none";
+					btns[i].style.display = "none";
+				}
+				while (n == n1){
+					n = Math.floor(Math.random()*9);
+				}
+				n1 = n;
+				btns[n].style.display = "block";
+				//小灰灰或者灰太狼
+				or = Math.floor(Math.random()*10);
+				if (or < 2) {
+					//小灰灰 [0, 2)
+					function wolf() {
+						btns[n].onclick = function (){
+							if (y == 0) {
+								x = 12;
+								this.style.background = "url(img/x" + x + ".png)";
+								y = 1;
+								console.log("-----------------------");
+								defen -= 10;
+								fen.innerHTML = defen;
+							}	
+						}
+						if (x >= 6 && x < 12) {
+							btns[n].style.background = "url(img/x" + (11-x) + ".png)";
+						}
+						if (x < 6) {
+							btns[n].style.background = "url(img/x" + x + ".png)";
+						}
+						if (x >= 12) {
+							btns[n].style.background = "url(img/x" + x + ".png)";
+						}
+						x++;
+						console.log(x);
+						console.log(btns[n].style.background);
+						if (x == 12) {
+							clearInterval(s2);
+							x = 0;
+							btns[n].style.display = "none";
+						}
+						if (x == 16) {
+							clearInterval(s2);
+							x = 0;
+							btns[n].style.display = "none";
+						}
+					}
+				} else{
+					//灰太狼 [2, 10)
+					function wolf() {
+						btns[n].onclick = function (){
+							if (y == 0) {
+								x = 12;
+								this.style.background = "url(img/h" + x + ".png)";
+								y = 1;
+								console.log("-----------------------");
+								defen += 10;
+								fen.innerHTML = defen;
+							}
+						}
+						if (x >= 6 && x < 12) {
+							btns[n].style.background = "url(img/h" + (11-x) + ".png)";
+						}
+						if (x < 6) {
+							btns[n].style.background = "url(img/h" + x + ".png)";
+						}
+						if (x >= 12) {
+							btns[n].style.background = "url(img/h" + x + ".png)";
+						}
+						x++;
+						console.log(x);
+						console.log(btns[n].style.background);
+						if (x == 12) {
+							clearInterval(s2);
+							x = 0;
+							btns[n].style.display = "none";
+						}
+						if (x == 16) {
+							clearInterval(s2);
+							x = 0;
+							btns[n].style.display = "none";
+						}
+					}
+				}
+				s2 = setInterval(wolf,90);
+			}
+			s1 = setInterval(keng,1200);
+			function djs(){
+				sj--;
+				djst.style.width = cd * sj / 2000 + "px";
+				if (sj == 0) {
+					clearInterval(s1);
+					clearInterval(s3);
+				}
+			}
+			function sjt(){
+				s3 = setInterval(djs,10);
+			}
+			s0 = setTimeout(sjt,1200);
+		}
+	}
+</script>
